@@ -21,7 +21,7 @@ export const Form = () => {
       .string({
         message: "رمز عبور را وارد کنید",
       })
-      .min(2, {
+      .min(8, {
         message: "رمز عبور حداقل باید 8 حرفی باشد",
       }),
   });

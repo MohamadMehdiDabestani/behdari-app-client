@@ -11,10 +11,14 @@ export const Items = () => {
     <Fragment>
       <Toolbar />
       <Divider />
+
+      <List>
+        <Item href="/panel/accounts" title='مدیریت کاربران' icon={<VaccinesIcon />} />
+      </List>
+      <Divider />
       <List>
         <Item href="/panel/medicine" title='دارو ها' icon={<VaccinesIcon />} />
         <Item href="/panel/patient" title='بیماران' icon={<LocalHotelIcon />} />
-        
       </List>
     </Fragment>
   );
