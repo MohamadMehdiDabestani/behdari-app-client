@@ -9,5 +9,4 @@ export interface ApiResult{
   statusCode : number,
   isSuccess : boolean,
   data : any
-
 }

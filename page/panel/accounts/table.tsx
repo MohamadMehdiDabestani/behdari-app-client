@@ -31,7 +31,6 @@ export const Table = ({ data }: ApiResult) => {
     { field: "fullName", headerName: "نام کامل", width: 150 },
     { field: "personalCode", headerName: "شماره ی پرسنلی", width: 150 },
     { field: "phoneNumber", headerName: "شماره ی همراه", width: 150 },
-
     {
       field: "actions",
       type: "actions",
