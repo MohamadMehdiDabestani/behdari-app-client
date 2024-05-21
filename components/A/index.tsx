@@ -1,14 +1,17 @@
 import Link, { LinkProps } from "next/link";
 import { Typography, TypographyProps } from "@mui/material";
+import { Children } from "@/interface";
 
-type Props = LinkProps & TypographyProps;
+interface Props extends Children {
+  a: LinkProps;
+  p: TypographyProps;
+}
 
 export const A = (props: Props) => {
-  const link = props as LinkProps;
-  const tp = props as TypographyProps;
+ 
   return (
-    <Link {...link}>
-      <Typography {...tp}>{props.children}</Typography>
+    <Link {...props.a}>
+      <Typography {...props.p}>{props.children}</Typography>
     </Link>
   );
 };

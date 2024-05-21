@@ -51,7 +51,7 @@ export function Menu(props : Children) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            گروه سرود مرده شور خانه
+            پنل مدیریتی بهداری
           </Typography>
         </Toolbar>
       </AppBar>

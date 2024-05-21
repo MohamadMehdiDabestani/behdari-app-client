@@ -1,5 +1,5 @@
 import { ApiResult } from "@/interface";
-import { Medicine } from "@/page";
+import { ListPacks } from "@/page";
 const getData = async (
   pageId: string | undefined,
   take: string | undefined
@@ -12,10 +12,10 @@ const getData = async (
     id = Number(pageId);
     t = Number(take);
     const req = await fetch(
-      `${process.env.API_END_POINT}/Medicine?PageId=${id}&TakeEntity=${t}`,
+      `${process.env.API_END_POINT}/Pack?PageId=${id}&TakeEntity=${t}`,
       {
         next: {
-          tags: ["medicinesList"],
+          tags: ["packsList"],
         },
       }
     );
@@ -41,5 +41,6 @@ export default async function Page({
   };
 }) {
   const data = await getData(searchParams?.pageId, searchParams?.take);
-  return <Medicine {...data} />;
+//   console.log(data)
+  return <ListPacks {...data} />;
 }

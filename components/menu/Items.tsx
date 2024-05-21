@@ -6,6 +6,7 @@ import Toolbar from "@mui/material/Toolbar";
 import { Item } from "./Item";
 import VaccinesIcon from "@mui/icons-material/Vaccines";
 import LocalHotelIcon from '@mui/icons-material/LocalHotel';
+import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 export const Items = () => {
   return (
     <Fragment>
@@ -19,6 +20,7 @@ export const Items = () => {
       <List>
         <Item href="/panel/medicine" title='دارو ها' icon={<VaccinesIcon />} />
         <Item href="/panel/patient" title='بیماران' icon={<LocalHotelIcon />} />
+        <Item href="/panel/pack" title='پک ها' icon={<MedicalServicesIcon />} />
       </List>
     </Fragment>
   );

@@ -9,6 +9,8 @@ const getData = async (): Promise<ApiResult> => {
       },
     });
     const json = (await req.json()) as ApiResult;
+    const data = json.data
+    console.log(data)
     return json;
   } catch (error) {
     console.log(error);
