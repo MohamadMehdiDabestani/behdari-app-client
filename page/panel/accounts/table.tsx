@@ -12,23 +12,28 @@ import invalidCache from "@/utils/invalidCache";
 import { useAtom } from "jotai";
 import { snack } from "@/atom";
 export const Table = ({ data }: ApiResult) => {
-  const axios = useApi()
+  const axios = useApi();
   const [_, setSnack] = useAtom(snack);
-  const onDelete = async (id : any) => {
+  const onDelete = async (id: any) => {
     try {
-      const req = await axios.delete(`/User/${id}`)
+      const req = await axios.delete(`/User/${id}`);
       invalidCache("usersList");
       setSnack({
         show: true,
         text: req.data.message,
         type: "success",
       });
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   };
   const columns: GridColDef[] = [
-    { field: "fullName", headerName: "نام کامل", width: 150 },
+    {
+      field: "fullName",
+      renderCell(params) {
+          return `${params.row.name} ${params.row.family}`
+      },
+      headerName: "نام کامل",
+      width: 150,
+    },
     { field: "personalCode", headerName: "شماره ی پرسنلی", width: 150 },
     { field: "phoneNumber", headerName: "شماره ی همراه", width: 150 },
     {
@@ -39,11 +44,14 @@ export const Table = ({ data }: ApiResult) => {
           color='error'
           key={0}
           icon={<DeleteIcon />}
-          onClick={() => onDelete(params.row.id)}
+          onClick={() => onDelete(params.row.userId)}
           label='Delete'
         />,
       ],
     },
   ];
-  return <DataGrid rows={data.users} columns={columns} />;
+  console.log(data.users);
+  return (
+    <DataGrid getRowId={() => "userId"} rows={data.users} columns={columns} />
+  );
 };
