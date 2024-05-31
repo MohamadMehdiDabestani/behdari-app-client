@@ -5,9 +5,16 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Typography, Button, Paper } from "@mui/material";
 import useApi from "@/hooks/useApi";
+import { ApiResult } from "@/interface";
+import { useAtom } from "jotai";
+import { token } from "@/atom/token";
+import { useRouter } from "next/navigation";
+import { useToken } from "@/hooks/useToken";
 
 export const Form = () => {
   const axios = useApi();
+  const {push} = useRouter()
+  const {setToken}= useToken()
   const SignUpSchema = z.object({
     code: z.coerce
       .number({
@@ -32,10 +39,15 @@ export const Form = () => {
   });
   const onSubmit: SubmitHandler<SignUpSchemaType> = async (data) => {
     try {
-      const req = await axios.post("/account", {
+      const req = await axios.post<ApiResult>("/account", {
         personalCode: z.coerce.string().parse(data.code),
         password: data.password,
       });
+      setToken({
+        refreshToken : req.data.data.refreshToken,
+        token : req.data.data.token,
+      })
+      push("/panel")
     } catch (error) {}
   };
   return (

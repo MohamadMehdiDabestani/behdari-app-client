@@ -2,11 +2,17 @@
 import axios from "axios";
 import { loading, snack } from "@/atom";
 import { useAtom } from "jotai";
+import useLocalStorage from "./useLocalStorage";
+import { useToken } from "./useToken";
 const useApi = () => {
   const [_, setError] = useAtom(snack);
   const [__, setLoading] = useAtom(loading);
+  const {_token , setToken}= useToken()
   const instance = axios.create({
     baseURL: "https://behdari.liara.run/api/v1",
+    headers : {
+      "Authorization" : `Bearer ${_token.token}`
+    }
   });
   const showError = (text: string) => {
     setError({

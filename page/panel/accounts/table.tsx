@@ -29,7 +29,7 @@ export const Table = ({ data }: ApiResult) => {
     {
       field: "fullName",
       renderCell(params) {
-          return `${params.row.name} ${params.row.family}`
+        return `${params.row.name} ${params.row.family}`;
       },
       headerName: "نام کامل",
       width: 150,
@@ -52,6 +52,6 @@ export const Table = ({ data }: ApiResult) => {
   ];
   console.log(data.users);
   return (
-    <DataGrid getRowId={() => "userId"} rows={data.users} columns={columns} />
+    <DataGrid getRowId={(row) => row.userId} rows={data.users} columns={columns} />
   );
 };

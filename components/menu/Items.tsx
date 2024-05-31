@@ -7,6 +7,7 @@ import { Item } from "./Item";
 import VaccinesIcon from "@mui/icons-material/Vaccines";
 import LocalHotelIcon from '@mui/icons-material/LocalHotel';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 export const Items = () => {
   return (
     <Fragment>
@@ -14,7 +15,7 @@ export const Items = () => {
       <Divider />
 
       <List>
-        <Item href="/panel/accounts" title='مدیریت کاربران' icon={<VaccinesIcon />} />
+        <Item href="/panel/accounts" title='مدیریت کاربران' icon={<SupervisedUserCircleIcon />} />
       </List>
       <Divider />
       <List>

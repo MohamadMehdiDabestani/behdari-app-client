@@ -1,9 +1,10 @@
 import { ApiResult } from "@/interface";
-import { ChargeMedicine } from "@/page";
-const getData = async (id: string): Promise<ApiResult> => {
+import { EditMedicine } from "@/page";
+const getData = async (id: string | undefined): Promise<ApiResult> => {
   try {
     const req = await fetch(`${process.env.API_END_POINT}/Medicine/${id}`);
     const json = (await req.json()) as ApiResult;
+    console.log(json);
     return json;
   } catch (error) {
     console.log(error);
@@ -15,7 +16,9 @@ const getData = async (id: string): Promise<ApiResult> => {
     };
   }
 };
+
 export default async function Page({ params }: { params: { id: string } }) {
-  const data = await getData(params.id);
-  return <ChargeMedicine {...data} />;
+  console.log("id", params?.id);
+  const data = await getData(params?.id);
+  return <EditMedicine {...data} />;
 }

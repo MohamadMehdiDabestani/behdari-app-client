@@ -7,3 +7,6 @@ export * from "./panel/medicine/add";
 export * from "./panel/medicine/charge";
 export * from "./panel/pack";
 export * from './panel/pack/add'
+export * from './panel/medicine/edit'
+export * from './panel/patient/add'
+export * from './panel/patient'

@@ -15,13 +15,13 @@ import invalidCache from "@/utils/invalidCache";
 import { snack } from "@/atom";
 import { useAtom } from "jotai";
 import AddIcon from "@mui/icons-material/Add";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import usePagination from "@/hooks/usePagination";
 
 export const Table = ({ data }: ApiResult) => {
   const router = useRouter();
-  const {paginationModel, setPaginationModel} = usePagination({
+  const { paginationModel, setPaginationModel } = usePagination({
     pageSize: data.takeEntity as number,
     pageId: (data.pageId as number) - 1,
     cache: "medicinesList",
@@ -56,10 +56,11 @@ export const Table = ({ data }: ApiResult) => {
       headerName: "موجودی",
       width: 250,
       cellClassName: (params) => {
-        return params.row.medicineCharges.reduce((value : number, e : any) => {
-          return value + e.count
-        } , 0) < params.row.countLimit ? "bg-error" :""
-         
+        return params.row.medicineCharges.reduce((value: number, e: any) => {
+          return value + e.count;
+        }, 0) < params.row.countLimit
+          ? "bg-error"
+          : "";
       },
       renderCell: (params: any) => (
         <Box
@@ -100,6 +101,13 @@ export const Table = ({ data }: ApiResult) => {
           onClick={() => router.push(`/panel/medicine/charge/${params.row.id}`)}
           label='add'
         />,
+        <GridActionsCellItem
+          color='warning'
+          key={2}
+          icon={<ModeEditIcon />}
+          onClick={() => router.push(`/panel/medicine/edit/${params.row.id}`)}
+          label='add'
+        />,
       ],
     },
   ];
@@ -108,7 +116,7 @@ export const Table = ({ data }: ApiResult) => {
       rows={data.medicines}
       getRowHeight={({ model }: GridRowHeightParams) => {
         if (model.medicineCharges) {
-          if(model.medicineCharges.length > 10) return "auto";
+          if (model.medicineCharges.length > 10) return "auto";
           return 50 * model.medicineCharges.length;
         }
         return null;

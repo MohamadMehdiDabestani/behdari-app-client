@@ -25,7 +25,7 @@ export const ChargeMedicine = ({ data }: ApiResult) => {
         message: "تعداد دارو را وارد کنید",
       })
       .int(),
-    manufactureDate: z.string({
+      entryDate: z.string({
       message: "تاریخ ساخت را وارد کنید",
     }),
     expireDate: z.string({
@@ -38,7 +38,7 @@ export const ChargeMedicine = ({ data }: ApiResult) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       expireDate: "0/0/0",
-      manufactureDate: "0/0/0",
+      entryDate: "0/0/0",
     },
   });
 
@@ -108,14 +108,14 @@ export const ChargeMedicine = ({ data }: ApiResult) => {
         </Grid>
         <Grid xs={6} md={4}>
           <Controller
-            name='manufactureDate'
+            name='entryDate'
             control={control}
             render={({ field }) => (
               <TextField
                 fullWidth
-                label='تاریخ تولید'
-                error={!!formState.errors.manufactureDate}
-                helperText={formState.errors.manufactureDate?.message}
+                label='تاریخ ورود'
+                error={!!formState.errors.entryDate}
+                helperText={formState.errors.entryDate?.message}
                 {...field}
                 sx={{
                   mb: "2rem",

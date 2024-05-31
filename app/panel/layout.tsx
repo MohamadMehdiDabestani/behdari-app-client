@@ -1,4 +1,3 @@
-
 import { Menu } from "@/components";
 
 export default function RootLayout({
@@ -6,9 +5,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <Menu>
-        {children}
-    </Menu>
-  );
+  return <Menu>{children}</Menu>;
 }

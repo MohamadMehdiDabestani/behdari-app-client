@@ -61,8 +61,8 @@ export const AddMedicine = () => {
               message: "تعداد دارو را وارد کنید",
             })
             .int(),
-          manufactureDate: z.string({
-            message: "تاریخ ساخت را وارد کنید",
+          entryDate: z.string({
+            message: "تاریخ ورود را وارد کنید",
           }),
           expireDate: z.string({
             message: "تاریخ انقضا را وارد کنید",
@@ -85,7 +85,7 @@ export const AddMedicine = () => {
           medicineCharge: {
             count: 0,
             expireDate: "0/0/0",
-            manufactureDate: "0/0/0",
+            entryDate: "0/0/0",
           },
         },
       ],
@@ -98,11 +98,8 @@ export const AddMedicine = () => {
   const onSubmit: SubmitHandler<FormSchemaType> = async (data) => {
     const newArray = data.list.map((item) => {
       return {
-        name: item.name,
         type: z.coerce.number().parse(item.selectedType),
-        countLimit: item.countLimit,
-        timeLimit: item.timeLimit,
-        medicineCharge: item.medicineCharge,
+        ...item
       };
     });
     const req = await axios.post<ApiResult>("/MedicineRange", newArray);
@@ -295,22 +292,22 @@ export const AddMedicine = () => {
           </Grid>
           <Grid xs={6} md={3}>
             <Controller
-              name={`list.${idx}.medicineCharge.manufactureDate`}
+              name={`list.${idx}.medicineCharge.entryDate`}
               control={control}
               render={({ field }) => (
                 <TextField
                   fullWidth
-                  label='تاریخ ساخت'
+                  label='تاریخ ورود'
                   error={
                     formState.errors.list
                       ? !!formState.errors.list[idx]?.medicineCharge
-                          ?.manufactureDate
+                          ?.entryDate
                       : false
                   }
                   helperText={
                     formState.errors.list
                       ? formState.errors.list[idx]?.medicineCharge
-                          ?.manufactureDate?.message
+                          ?.entryDate?.message
                       : undefined
                   }
                   {...field}
@@ -352,7 +349,7 @@ export const AddMedicine = () => {
             medicineCharge: {
               count: 0,
               expireDate: "0/0/0",
-              manufactureDate: "0/0/0",
+              entryDate: "0/0/0",
             },
           });
         }}

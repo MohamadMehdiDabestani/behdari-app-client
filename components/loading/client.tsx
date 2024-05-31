@@ -6,5 +6,5 @@ import { Fragment } from 'react'
 
 export const ClientLoading = () => {
     const [isLoading, _] = useAtom(loading)
-    return isLoading ? <Loading /> : <Fragment></Fragment>
+    return isLoading ? <Loading  /> : <Fragment></Fragment>
 }
