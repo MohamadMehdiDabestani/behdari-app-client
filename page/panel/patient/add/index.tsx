@@ -117,8 +117,9 @@ export const AddPantient = ({ data }: ApiResult) => {
                   options={data as string[]}
                   fullWidth
                   value={field.value}
-                  onChange={(e, newValue) => {
-                    field.onChange(newValue);
+                  onChange={(e, newValue : any) => {
+                    console.log('new value' , newValue)
+                    field.onChange(newValue.id);
                   }}
                   renderInput={(params) => (
                     <TextField

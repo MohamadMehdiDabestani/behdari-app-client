@@ -7,7 +7,10 @@ import { useToken } from "./useToken";
 const useApi = () => {
   const [_, setError] = useAtom(snack);
   const [__, setLoading] = useAtom(loading);
-  const {_token , setToken}= useToken()
+  const [_token, setLocale] = useLocalStorage("token", {
+    refreshToken: "",
+    token: "",
+  });
   const instance = axios.create({
     baseURL: "https://behdari.liara.run/api/v1",
     headers : {
@@ -36,6 +39,7 @@ const useApi = () => {
       setLoading(false)
       if (!response.data.isSuccess) {
         showError(response.data.message);
+        return Promise.reject(response);
       }
       return response;
     },

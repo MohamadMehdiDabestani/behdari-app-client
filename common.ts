@@ -7,7 +7,14 @@ export const medicineType = {
   5: "محلول",
 };
 export const patientQueueStatus = {
-  0 : "در حال انتظار",
-  1 : "در حال معالجه",
-  2 : "تکمیل شده"
-}
+  0: "در حال انتظار",
+  1: "در حال معالجه",
+  2: "تکمیل شده",
+};
+export const roles = {
+  admin: "Admin",
+  doctor: "Doctor",
+  nurse: "nurse",
+  hsee: "Hsee",
+  edari : "Edari"
+};

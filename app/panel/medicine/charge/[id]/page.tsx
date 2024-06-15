@@ -1,8 +1,17 @@
+import getUserToken from "@/actions/getUserToken";
+import roleCheck from "@/actions/roleCheck";
+import { roles } from "@/common";
 import { ApiResult } from "@/interface";
 import { ChargeMedicine } from "@/page";
+import { redirect } from "next/navigation";
 const getData = async (id: string): Promise<ApiResult> => {
   try {
-    const req = await fetch(`${process.env.API_END_POINT}/Medicine/${id}`);
+    const token = await getUserToken();
+    const req = await fetch(`${process.env.API_END_POINT}/Medicine/${id}` , {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const json = (await req.json()) as ApiResult;
     return json;
   } catch (error) {
@@ -16,6 +25,8 @@ const getData = async (id: string): Promise<ApiResult> => {
   }
 };
 export default async function Page({ params }: { params: { id: string } }) {
+  const check = await roleCheck([roles["admin"], roles["doctor"]]);
+  if (!check) redirect("/");
   const data = await getData(params.id);
   return <ChargeMedicine {...data} />;
 }

@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import {Dispatch,SetStateAction, ReactNode } from "react";
 
 export interface Children {
   children: ReactNode;
@@ -19,4 +19,9 @@ export interface ApiResult {
     howManyShowPageAfterAndBefore?: number;
     [key:string] : any
   } 
+}
+
+export interface DialogProps {
+  open : boolean,
+  setOpen : Dispatch<SetStateAction<boolean>>
 }

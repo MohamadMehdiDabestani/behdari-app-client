@@ -1,12 +1,20 @@
+import getUserToken from "@/actions/getUserToken";
+import roleCheck from "@/actions/roleCheck";
+import { roles } from "@/common";
 import { ApiResult } from "@/interface";
 import { AddPack } from "@/page";
+import { redirect } from "next/navigation";
 const getData = async (): Promise<any[]> => {
   try {
+    const token = await getUserToken();
     const req = await fetch(
       `${process.env.API_END_POINT}/Medicine?TakeEntity=9999`,
       {
         next: {
           tags: ["medicinesList"],
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -20,7 +28,8 @@ const getData = async (): Promise<any[]> => {
 };
 
 export default async function Page() {
+  const check = await roleCheck([roles["admin"], roles["doctor"] , roles['nurse']]);
+  if (!check) redirect("/");
   const data = await getData();
-  console.log(data);
   return <AddPack list={data} />;
 }

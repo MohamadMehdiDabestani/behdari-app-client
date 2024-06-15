@@ -14,7 +14,10 @@ export const ExtraInput = () => {
   useEffect(() => {
     (async () => {
       const req = await axios.get<ApiResult>("/User?TakeEntity=9999")
-      setData(req.data.data.users.map((e : any) => e.personalCode))
+      setData(req.data.data.map((e : any) => ({
+        label: `${e.personalCode} - ${e.name +' '+ e.family} - ${e.nationalCode}`,
+        id : e.personalCode,
+      })))
     })();
   }, []);
   return (
@@ -36,8 +39,8 @@ export const ExtraInput = () => {
               options={data}
               fullWidth
               value={field.value}
-              onChange={(e, newValue) => {
-                field.onChange(newValue);
+              onChange={(e, newValue : any) => {
+                field.onChange(newValue.id);
               }}
               renderInput={(params) => (
                 <TextField

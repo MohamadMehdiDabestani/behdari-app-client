@@ -1,3 +1,4 @@
+"use client";
 import { snack } from "@/atom";
 import useApi from "@/hooks/useApi";
 import { useAtom } from "jotai";
@@ -28,6 +29,11 @@ export const CreateGuestUser = () => {
           message: "کد ملی را وارد کنید",
         })
         .min(1, "کد ملی را وارد کنید"),
+      tel: z
+        .string({
+          message: "شماره ی تماس را وارد کنید",
+        })
+        .min(1, "شماره ی تماس را وارد کنید"),
     })
     .partial();
   const fixErrorSchema = z.object({
@@ -120,6 +126,7 @@ export const CreateGuestUser = () => {
           />
         )}
       />
+      
       <Controller
         name='guestUser.nationalCode'
         control={control}
@@ -129,6 +136,22 @@ export const CreateGuestUser = () => {
             label='کد ملی'
             error={!!formState.errors.guestUser?.nationalCode}
             helperText={formState.errors.guestUser?.nationalCode?.message}
+            {...field}
+            sx={{
+              mb: "2rem",
+            }}
+          />
+        )}
+      />
+            <Controller
+        name='guestUser.tel'
+        control={control}
+        render={({ field }) => (
+          <TextField
+            fullWidth
+            label='شماره ی تماس'
+            error={!!formState.errors.guestUser?.tel}
+            helperText={formState.errors.guestUser?.tel?.message}
             {...field}
             sx={{
               mb: "2rem",

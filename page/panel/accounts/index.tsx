@@ -1,10 +1,11 @@
-import { ApiResult } from "@/interface";
+
 import { Box, Button } from "@mui/material";
 import Link from "next/link";
 import { Fragment } from "react";
 import { Table } from "./table";
 
-export const Accounts = (props: ApiResult) => {
+
+export const Accounts = (props: any) => {
   return (
     <Fragment>
       <Link href='/panel/accounts/add'>
@@ -17,6 +18,7 @@ export const Accounts = (props: ApiResult) => {
           width: "100%",
         }}
       >
+
         <Table {...props} />
       </Box>
     </Fragment>

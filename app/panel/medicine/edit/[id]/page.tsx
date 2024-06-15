@@ -1,10 +1,18 @@
+import getUserToken from "@/actions/getUserToken";
+import roleCheck from "@/actions/roleCheck";
+import { roles } from "@/common";
 import { ApiResult } from "@/interface";
 import { EditMedicine } from "@/page";
+import { redirect } from "next/navigation";
 const getData = async (id: string | undefined): Promise<ApiResult> => {
   try {
-    const req = await fetch(`${process.env.API_END_POINT}/Medicine/${id}`);
+    const token = await getUserToken();
+    const req = await fetch(`${process.env.API_END_POINT}/Medicine/${id}` , {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const json = (await req.json()) as ApiResult;
-    console.log(json);
     return json;
   } catch (error) {
     console.log(error);
@@ -18,7 +26,8 @@ const getData = async (id: string | undefined): Promise<ApiResult> => {
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
-  console.log("id", params?.id);
+  const check = await roleCheck([roles["admin"], roles["doctor"]]);
+  if (!check) redirect("/");
   const data = await getData(params?.id);
   return <EditMedicine {...data} />;
 }

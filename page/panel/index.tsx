@@ -1,9 +1,5 @@
+import { Typography } from "@mui/material";
 
-import dynamic from "next/dynamic";
-
-const Form = dynamic(() => import('./form'))
 export const Panel = () => {
-  return (
-    <Form />
-  );
+  return <Typography>معدن اردکان</Typography>;
 };

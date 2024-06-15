@@ -10,11 +10,12 @@ import { useAtom } from "jotai";
 import { token } from "@/atom/token";
 import { useRouter } from "next/navigation";
 import { useToken } from "@/hooks/useToken";
+import setCookie from "@/actions/setCookie";
 
 export const Form = () => {
   const axios = useApi();
-  const {push} = useRouter()
-  const {setToken}= useToken()
+  const { push } = useRouter();
+  const { setToken } = useToken();
   const SignUpSchema = z.object({
     code: z.coerce
       .number({
@@ -44,10 +45,17 @@ export const Form = () => {
         password: data.password,
       });
       setToken({
-        refreshToken : req.data.data.refreshToken,
-        token : req.data.data.token,
-      })
-      push("/panel")
+        refreshToken: req.data.data.refreshToken,
+        token: req.data.data.token,
+      });
+      setCookie(
+        "token",
+        JSON.stringify({
+          refreshToken: req.data.data.refreshToken,
+          token: req.data.data.token,
+        })
+      ); // for server side access
+      push("/panel");
     } catch (error) {}
   };
   return (

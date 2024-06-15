@@ -9,6 +9,10 @@ export const Medicine = (props: ApiResult) => {
       <Link  href='/panel/medicine/add'>
         <Button sx={{mb : "1rem"}}>ثبت داروی جدید</Button>
       </Link>
+      <Link  href="/panel/pack">
+        <Button sx={{mb : "1rem" , ml : "1rem"}}>پک ها</Button>
+      </Link>
+      
       <Table {...props} />
     </Box>
   );

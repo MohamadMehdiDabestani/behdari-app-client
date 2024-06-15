@@ -14,7 +14,7 @@ export const DialogForm = (dialog: Props) => {
   };
 
   return (
-    <Dialog onClose={handleClose} {...dialog} open={open}>
+    <Dialog {...dialog} >
       {dialog.children}
     </Dialog>
   );

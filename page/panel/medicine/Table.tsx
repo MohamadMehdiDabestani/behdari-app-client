@@ -7,6 +7,7 @@ import {
   GridColDef,
   GridRowHeightParams,
   GridRowParams,
+  GridToolbar,
 } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { medicineType } from "@/common";
@@ -19,13 +20,8 @@ import { useRouter } from "next/navigation";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import usePagination from "@/hooks/usePagination";
 
-export const Table = ({ data }: ApiResult) => {
+export const Table = ({ data }: any) => {
   const router = useRouter();
-  const { paginationModel, setPaginationModel } = usePagination({
-    pageSize: data.takeEntity as number,
-    pageId: (data.pageId as number) - 1,
-    cache: "medicinesList",
-  });
 
   const axios = useApi();
   const [_, setSnack] = useAtom(snack);
@@ -113,7 +109,7 @@ export const Table = ({ data }: ApiResult) => {
   ];
   return (
     <DataGrid
-      rows={data.medicines}
+      rows={data}
       getRowHeight={({ model }: GridRowHeightParams) => {
         if (model.medicineCharges) {
           if (model.medicineCharges.length > 10) return "auto";
@@ -127,12 +123,11 @@ export const Table = ({ data }: ApiResult) => {
           bgcolor: (t) => t.palette.error.light,
         },
       }}
-      pageSizeOptions={[8]}
-      paginationModel={paginationModel}
-      paginationMode='server'
-      onPaginationModelChange={setPaginationModel}
-      rowCount={data.allEntitiesCount}
+      pageSizeOptions={[5, 10, 25]}
+      slots={{ toolbar: GridToolbar }}
       initialState={{
+        pagination: { paginationModel: { pageSize: 5 } },
+
         columns: {
           columnVisibilityModel: {
             // Hide columns status and traderName, the other columns will remain visible

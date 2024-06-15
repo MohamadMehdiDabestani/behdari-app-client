@@ -1,5 +1,9 @@
+import roleCheck from "@/actions/roleCheck";
 import { ApiResult } from "@/interface";
 import { ListPatient } from "@/page";
+import {roles} from '@/common'
+import getUserToken from "@/actions/getUserToken";
+import { redirect } from "next/navigation";
 const getData = async (
   pageId: string | undefined,
   take: string | undefined
@@ -11,16 +15,32 @@ const getData = async (
     if (!take) take = "15";
     id = Number(pageId);
     t = Number(take);
-    const req = await fetch(
-      `${process.env.API_END_POINT}/PatientQueue?PageId=${id}&TakeEntity=${t}`,
-      {
-        next: {
-          tags: ["patientList"],
-        },
-      }
-    );
+    const token = await getUserToken();
+
+    const [req , isHse , isDoctor] = await Promise.all([
+      fetch(
+        `${process.env.API_END_POINT}/PatientQueue?PageId=${id}&TakeEntity=${t}`,
+        {
+          next: {
+            tags: ["patientList"],
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+      roleCheck(['hsee']),
+      roleCheck(['doctor' , roles['nurse']])
+    ])
     const json = (await req.json()) as ApiResult;
-    return json;
+    return {
+      ...json,
+      data : {
+        ...json.data,
+        isHse,
+        isDoctor
+      }
+    };
   } catch (error) {
     console.log(error);
     return {
@@ -40,8 +60,9 @@ export default async function Page({
     take?: string;
   };
 }) {
+  const check = await roleCheck([roles["admin"],roles['hsee'], roles["doctor"] , roles['nurse']]);
+  if (!check) redirect("/");
   const data = await getData(searchParams?.pageId, searchParams?.take);
-
   //   console.log(data)
   return <ListPatient {...data} />;
 }

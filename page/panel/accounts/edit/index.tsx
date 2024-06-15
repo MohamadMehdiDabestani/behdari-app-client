@@ -20,11 +20,13 @@ import { snack } from "@/atom";
 import { useAtom } from "jotai";
 import { ApiResult } from "@/interface";
 import { useRouter } from "next/navigation";
-export const AddAccount = ({ data }: { data: any }) => {
+export const EditAccount = ({ data }: { data: any }) => {
+  console.log(data);
   const axios = useApi();
   const [_, setSnack] = useAtom(snack);
   const router = useRouter();
   const formSchema = z.object({
+    userId: z.coerce.number().positive().int(),
     name: z
       .string({
         message: "نام را وارد کنید",
@@ -162,18 +164,24 @@ export const AddAccount = ({ data }: { data: any }) => {
         message: "صطح دسترسی را انتخاب کنید",
       })
       .array()
-      .optional(),
+      .optional()
   });
   type FormSchemaType = z.infer<typeof formSchema>;
   const { handleSubmit, control, formState } = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       userSelectedPermissions: [],
+      family: data.user.family,
+      name: data.user.name,
+      userId: data.user.userId,
+      personalCode: data.user.personalCode,
+      roleName: data.user.userRoles[0].roleName,
+      ...data.user,
     },
   });
   const onSubmit: SubmitHandler<FormSchemaType> = async (data) => {
     try {
-      const req = await axios.post<ApiResult>("/User", {
+      const req = await axios.put<ApiResult>("/User", {
         ...data,
         personalCode: z.coerce.string().parse(data.personalCode),
       });

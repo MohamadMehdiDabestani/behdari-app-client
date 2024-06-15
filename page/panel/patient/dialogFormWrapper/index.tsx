@@ -10,8 +10,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useSearchParams } from "next/navigation";
-import { Fragment, useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
@@ -27,22 +27,24 @@ import { NestedMedicines } from "./nestedMedicines";
 import { NestedPacks } from "./nestedPacks";
 import Divider from "@mui/material/Divider";
 import { TabOption } from "./tabOption";
-import { token } from "@/atom/token";
 import { useAtom } from "jotai";
 import invalidCache from "@/utils/invalidCache";
-import { dialogForm, snack } from "@/atom";
+import { selectedUser, snack } from "@/atom";
 import { ExtraInput } from "./extraInput";
-
-const DialogFormWrapper = () => {
-  const [userFullName, setUserFullName] = useState("");
+interface Props {
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}
+const DialogFormWrapper = ({ open, setOpen }: Props) => {
   const [listPacks, setListPacks] = useState<any[]>([]);
   const [medicinesListState, setMedicinesListState] = useState<any[]>([]);
   const [tabValue, setTabValue] = useState<number>(0);
   const params = useSearchParams();
   const axios = useApi();
-  const [_token, setToken] = useAtom(token);
   const [_, setSnack] = useAtom(snack);
-  const [open, setOpen] = useAtom(dialogForm);
+  const [_selectedUser, setSelectedUser] = useAtom(selectedUser);
+  const pathname = usePathname();
+  const { replace } = useRouter();
   const mediciene = z.object({
     MedicineId: z.coerce
       .number({
@@ -111,6 +113,11 @@ const DialogFormWrapper = () => {
       referral: referralOption.nullable().optional(),
       dispatch: dispatchOption.nullable().optional(),
       other: otherOption.nullable().optional(),
+      doctorDiagnose: z
+        .string({
+          message: "تشخیص دکتر را وارد کنید",
+        })
+        .min(1, "تشخیص دکتر را وارد کنید"),
       packs,
       medicinesList,
     })
@@ -154,58 +161,56 @@ const DialogFormWrapper = () => {
     control: rootForm.control,
   });
   useEffect(() => {
-    (async () => {
-      if (params.get("id")) {
-        try {
-          const id = params.get("id");
-          const { data } = await axios.get<ApiResult>(`/PatientQueue/${id}`);
-          rootForm.reset();
-          if (data.data.guestUser) {
-            setUserFullName(data.data.guestUser.fullName);
-            rootForm.setValue("guestUserId", data.data.guestUser.id);
-          } else {
-            setUserFullName(data.data.user.fullName);
-            rootForm.setValue("personalCode", data.data.user.personalCode);
-          }
-          rootForm.setValue("is_Emergency", data.data.is_Emergency);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    })();
+    if (params.get("id")) {
+      if (_selectedUser.type == "guest")
+        rootForm.setValue("guestUserId", _selectedUser.id);
+      else
+        rootForm.setValue("personalCode", _selectedUser.personalCode as string);
+      rootForm.setValue("is_Emergency", _selectedUser.isEmergency);
+    }
   }, [params]);
   useEffect(() => {
     (async () => {
       const [packsReq, medicinesReq] = await Promise.all([
         axios.get<ApiResult>("/pack"),
-        axios.get<ApiResult>("/medicine"),
+        axios.get("/medicine"),
       ]);
       setListPacks(packsReq.data.data.packs);
-      setMedicinesListState(medicinesReq.data.data.medicines);
+      setMedicinesListState(medicinesReq.data.data);
     })();
   }, []);
-
+  useEffect(() => {
+    if (!open) {
+      const params = new URLSearchParams();
+      params.delete("id");
+      params.delete("extra");
+      replace(`${pathname}?${params.toString()}`);
+    }
+  }, [open]);
   const onSubmit: SubmitHandler<FormSchemaType> = async (formData) => {
     try {
+      let isHsee = true;
+      if (params.get("extra")) isHsee = false;
       let data: any = {};
       let state = 0;
+      console.log("tab value", tabValue);
       switch (tabValue) {
         case 0:
+          data.packs = formData.packs;
+          data.medicines = formData.medicinesList;
+          state = 2;
+          break;
+        case 1:
           data.reason = formData.dispatch?.reason;
           data.packs = formData.packs;
           data.medicines = formData.medicinesList;
           break;
-        case 1:
+        case 2:
           data.reason = formData.referral?.reason;
           data.expert = formData.referral?.expert;
           data.packs = formData.packs;
           data.medicines = formData.medicinesList;
           state = 1;
-          break;
-        case 2:
-          data.packs = formData.packs;
-          data.medicines = formData.medicinesList;
-          state = 2;
           break;
         case 3:
           data.description = formData.other?.description;
@@ -219,6 +224,8 @@ const DialogFormWrapper = () => {
         is_Emergency: formData.is_Emergency,
         state,
         receptionStateInfo: data,
+        is_Receptioned_By_HSE: isHsee,
+        doctorDiagnose: formData.doctorDiagnose,
       });
       invalidCache("patientList");
       setSnack({
@@ -232,13 +239,34 @@ const DialogFormWrapper = () => {
     }
   };
   return (
-    <DialogForm open={true} fullWidth maxWidth='lg'>
-      <DialogTitle>{userFullName}</DialogTitle>
+    <DialogForm
+      open={open}
+      onClose={() => setOpen(false)}
+      fullWidth
+      maxWidth='lg'
+    >
+      <DialogTitle>{_selectedUser.fullName}</DialogTitle>
       <DialogContent>
         <FormProvider {...rootForm}>
           <Box component='form' onSubmit={rootForm.handleSubmit(onSubmit)}>
             {params.get("extra") && <ExtraInput />}
             <TabOption tabValue={tabValue} onChangeTab={setTabValue} />
+            <Controller
+              name='doctorDiagnose'
+              control={rootForm.control}
+              render={({ field }) => (
+                <TextField
+                  fullWidth
+                  label='تشخصی دکتر'
+                  error={!!rootForm.formState.errors.doctorDiagnose}
+                  helperText={rootForm.formState.errors.doctorDiagnose?.message}
+                  {...field}
+                  sx={{
+                    mb: "2rem",
+                  }}
+                />
+              )}
+            />
             <Divider>دارو ها</Divider>
             <Button
               onClick={() => {
@@ -250,7 +278,7 @@ const DialogFormWrapper = () => {
               }}
               color='secondary'
               sx={{
-                mb : "1rem"
+                mb: "1rem",
               }}
             >
               افزودن دارو
@@ -279,7 +307,7 @@ const DialogFormWrapper = () => {
               }}
               color='secondary'
               sx={{
-                mb : "1rem"
+                mb: "1rem",
               }}
             >
               افزودن پک
