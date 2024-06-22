@@ -16,5 +16,15 @@ export const roles = {
   doctor: "Doctor",
   nurse: "nurse",
   hsee: "Hsee",
-  edari : "Edari"
+  edari: "Edari",
+};
+export const reportType = {
+  "0": "بیماران",
+  "1": "دارو های تجویز شده",
+  "2": "پذیرش شده توسط HSEE",
+  "3": "پذیرش شده توسط بهداری",
+  "4": "اعزامی ها",
+  "5": "ارجاعی ها",
+  "6": "تجویزی ها",
+  "7": "سایر",
 };

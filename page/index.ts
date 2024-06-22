@@ -11,3 +11,4 @@ export * from "./panel/medicine/edit";
 export * from "./panel/patient/add";
 export * from "./panel/patient";
 export * from "./panel/accounts/edit";
+export * from './panel/report'

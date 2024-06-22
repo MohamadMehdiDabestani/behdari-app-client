@@ -24,11 +24,9 @@ export default function RootLayout({
             <ThemeProvider theme={theme}> {/* for mui */}
               <CssBaseline /> {/* for mui */}
               <Suspense fallback={<Loading />}> {/* for stream loading animation */}
-                <SWRProvider> {/* for swr */}
-                  <Snack /> {/* for Snackbar notification */}
-                  <ClientLoading /> {/* for loading client form loading*/}
-                  {children}
-                </SWRProvider>
+                <Snack /> {/* for Snackbar notification */}
+                <ClientLoading /> {/* for loading client form loading*/}
+                {children}
               </Suspense>
             </ThemeProvider>
           </Rtl>

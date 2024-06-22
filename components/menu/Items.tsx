@@ -5,7 +5,7 @@ import List from "@mui/material/List";
 import Toolbar from "@mui/material/Toolbar";
 import { Item } from "./Item";
 import VaccinesIcon from "@mui/icons-material/Vaccines";
-import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import EarbudsIcon from '@mui/icons-material/Earbuds';
 export const Items = () => {
@@ -28,11 +28,10 @@ export const Items = () => {
         <Item href="/panel/patient" title='لیست پذیرش' icon={<EarbudsIcon />} />
       </List>
 
-      {/* <Divider />
+      <Divider />
       <List>
-        <Item href="/panel/patient" title='گزارش پذیرش' icon={<EarbudsIcon />} />
-        <Item href="/panel/patient" title='گزارش داروها' icon={<EarbudsIcon />} />
-      </List> */}
+        <Item href="/panel/report" title='گزارشات' icon={<AssessmentIcon />} />
+      </List>
     </Fragment>
   );
 };
