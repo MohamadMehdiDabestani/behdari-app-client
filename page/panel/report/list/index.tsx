@@ -3,20 +3,11 @@ import { Item } from "./item";
 import { Alert } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 
-const visitDateMapKey = {
-  0: "visitDate",
-  1: "prescriptionDate",
-  2: "visitDate",
-  3: "visitDate",
-  4: "dispatchReceptionDate",
-  5: "referralReceptionDate",
-  6: "prescriptionReceptionDate",
-  7: "otherReceptionDate",
-};
-export const List = ({ data }: { data: any[] }) => {
+
+export const List = ({ data ,visitDateMapKey}: { data: any[] , visitDateMapKey : object }) => {
   const params = useSearchParams();
-  console.log(data);
   const type = Number(params.get("type") ?? 0);
+  console.log(data);
   return (
     <Grid2 container spacing={5}>
       {data.length > 0 ? (

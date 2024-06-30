@@ -28,3 +28,4 @@ export const reportType = {
   "6": "تجویزی ها",
   "7": "سایر",
 };
+export const unaccessPath = '/panel' 

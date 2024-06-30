@@ -1,17 +1,18 @@
 import getUserToken from "@/actions/getUserToken";
 import roleCheck from "@/actions/roleCheck";
-import { roles } from "@/common";
+import { roles , unaccessPath } from "@/common";
 import { ApiResult } from "@/interface";
-import { ListPacks, Report } from "@/page";
+import {  Report } from "@/page";
 import { redirect } from "next/navigation";
 const getData = async (
   type?: string,
   startDate?: string,
-  endDate?: string
+  endDate?: string,
+  medicineName?: string,
+  packName?: string,
+  nationalCode?: string,
 ): Promise<ApiResult> => {
   try {
-    console.log(startDate);
-    console.log(endDate);
     const selectedType = Number(type) ?? 0;
     if (!startDate || !endDate)
       return {
@@ -20,6 +21,10 @@ const getData = async (
         message: "تاریخی مشخص کنید",
         statusCode: 404,
       };
+    const restData : any = {}
+    if(medicineName) restData["medicineName"] = medicineName
+    if(packName) restData["packName"] = packName
+    if(nationalCode) restData["nationalCode"] = nationalCode
     const token = await getUserToken();
     const req = await fetch(`${process.env.API_END_POINT}/Report`, {
       next: {
@@ -33,10 +38,12 @@ const getData = async (
       body: JSON.stringify({
         start_Date: startDate,
         end_Date: endDate,
-        state: selectedType,
+        type: selectedType,
+        ...restData
       }),
     });
     const json = (await req.json()) as ApiResult;
+    console.log("server" , json)
     return json;
   } catch (error) {
     console.log(error);
@@ -56,6 +63,9 @@ export default async function Page({
     type?: string;
     startDate?: string;
     endDate?: string;
+    medicineName?: string;
+    packName?: string;
+    nationalCode?: string;
   };
 }) {
   const check = await roleCheck([
@@ -63,11 +73,14 @@ export default async function Page({
     roles["doctor"],
     roles["nurse"],
   ]);
-  if (!check) redirect("/");
+  if (!check) redirect(unaccessPath);
   const data = await getData(
     searchParams?.type,
     searchParams?.startDate,
-    searchParams?.endDate
+    searchParams?.endDate,
+    searchParams?.medicineName,
+    searchParams?.packName,
+    searchParams?.nationalCode,
   );
   return <Report {...data} />;
 }

@@ -1,6 +1,6 @@
 import getUserToken from "@/actions/getUserToken";
 import roleCheck from "@/actions/roleCheck";
-import { roles } from "@/common";
+import { unaccessPath, roles } from "@/common";
 import { ApiResult } from "@/interface";
 import { AddAccount } from "@/page";
 import { redirect } from "next/navigation";
@@ -42,8 +42,8 @@ const getData = async (): Promise<ApiResult> => {
 };
 
 export default async function Page() {
-  const check = await roleCheck([roles['admin'] , roles['edari']]);
-  if(!check) redirect("/")
+  const check = await roleCheck([roles["admin"], roles["edari"]]);
+  if (!check) redirect(unaccessPath);
   const { data } = await getData();
 
   return <AddAccount data={data} />;

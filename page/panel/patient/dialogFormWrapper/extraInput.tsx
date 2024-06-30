@@ -9,7 +9,7 @@ import { ApiResult } from "@/interface";
 export const ExtraInput = () => {
   const [value, setValue] = useState<number>(0);
   const { control, formState } = useFormContext<any>();
-  const [data, setData] = useState<string[]>([]);
+  const [data, setData] = useState<{label : string , id : string}[]>([]);
   const axios = useApi()
   useEffect(() => {
     (async () => {

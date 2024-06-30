@@ -1,6 +1,6 @@
 import getUserToken from "@/actions/getUserToken";
 import roleCheck from "@/actions/roleCheck";
-import { roles } from "@/common";
+import { roles ,unaccessPath} from "@/common";
 import { ApiResult } from "@/interface";
 import { EditMedicine } from "@/page";
 import { redirect } from "next/navigation";
@@ -27,7 +27,7 @@ const getData = async (id: string | undefined): Promise<ApiResult> => {
 
 export default async function Page({ params }: { params: { id: string } }) {
   const check = await roleCheck([roles["admin"], roles["doctor"]]);
-  if (!check) redirect("/");
+  if (!check) redirect(unaccessPath);
   const data = await getData(params?.id);
   return <EditMedicine {...data} />;
 }

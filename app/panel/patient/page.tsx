@@ -1,7 +1,7 @@
 import roleCheck from "@/actions/roleCheck";
 import { ApiResult } from "@/interface";
 import { ListPatient } from "@/page";
-import {roles} from '@/common'
+import {roles , unaccessPath} from '@/common'
 import getUserToken from "@/actions/getUserToken";
 import { redirect } from "next/navigation";
 const getData = async (
@@ -61,7 +61,7 @@ export default async function Page({
   };
 }) {
   const check = await roleCheck([roles["admin"],roles['hsee'], roles["doctor"] , roles['nurse']]);
-  if (!check) redirect("/");
+  if (!check) redirect(unaccessPath);
   const data = await getData(searchParams?.pageId, searchParams?.take);
   //   console.log(data)
   return <ListPatient {...data} />;

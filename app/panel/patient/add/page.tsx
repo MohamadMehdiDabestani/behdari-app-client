@@ -1,6 +1,6 @@
 import getUserToken from "@/actions/getUserToken";
 import roleCheck from "@/actions/roleCheck";
-import { roles } from "@/common";
+import { roles ,unaccessPath} from "@/common";
 import { ApiResult } from "@/interface";
 import { AddPantient } from "@/page";
 import { redirect } from "next/navigation";
@@ -43,7 +43,7 @@ const getData = async (): Promise<ApiResult> => {
 
 export default async function Page() {
   const check = await roleCheck([roles["admin"], roles["hsee"]]);
-  if (!check) redirect("/");
+  if (!check) redirect(unaccessPath);
   const data = await getData();
   return <AddPantient {...data} />;
 }
